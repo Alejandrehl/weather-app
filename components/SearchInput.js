@@ -1,7 +1,11 @@
 import React from "react";
 import {StyleSheet, TextInput} from "react-native";
 
-const SearchInput = () => {
+const SearchInput = ({setLocation}) => {
+    const handleChangeText = (newLocation) => {
+        setLocation(newLocation);
+    };
+
     return (
         <TextInput
             autoCorrect={false}
@@ -10,6 +14,7 @@ const SearchInput = () => {
             style={styles.textInput}
             clearButtonMode="always"
             underlineColorAndroid="transparent"
+            onChangeText={handleChangeText}
         />
     )
 };

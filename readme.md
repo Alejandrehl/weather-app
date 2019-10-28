@@ -4,3 +4,5 @@
 - TextInput
 - Text
 - Platform 
+- View
+- ImageBackground
