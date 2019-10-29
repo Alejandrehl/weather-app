@@ -5,16 +5,38 @@ import {
     Platform,
     KeyboardAvoidingView,
     ImageBackground,
-    View
+    View,
+    ActivityIndicator,
+    StatusBar
 } from 'react-native';
 
+import {fetchLocationId, fetchWeather} from "./utils/api";
 import getImageForWeather from "./utils/getImageForWeather";
 import SearchInput from "./components/SearchInput";
 
 const App = () => {
     const [location, setLocation] = useState("");
-    const handleUpdateLocation = (city) => {
-        setLocation(city);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [temperature, setTemperature] = useState(0);
+    const [weather, setWeather] = useState('');
+
+    const handleUpdateLocation = async (city) => {
+        if (!city) return;
+        try {
+            setLoading(true);
+            const locationId = await fetchLocationId(city);
+            const {location, weather, temperature} = await fetchWeather(locationId);
+
+            setLoading(false);
+            setError(false);
+            setLocation(location);
+            setWeather(weather);
+            setTemperature(temperature);
+        } catch (e) {
+            setLoading(false);
+            setError(true);
+        }
     };
 
     useEffect(() => {
@@ -26,21 +48,41 @@ const App = () => {
             style={styles.container}
             behavior="padding"
         >
+            <StatusBar barStyle="light-content"/>
             <ImageBackground
                 source={getImageForWeather('Clear')}
                 style={styles.imageContainer}
                 imageStyle={styles.image}
             >
                 <View style={styles.detailsContainer}>
-                    <Text style={[styles.largeText, styles.textStyle]}>
-                        {location}
-                    </Text>
-                    <Text style={[styles.smallText, styles.textStyle]}>
-                        Light Cloud
-                    </Text>
-                    <Text style={[styles.largeText, styles.textStyle]}>
-                        24º
-                    </Text>
+                    <ActivityIndicator
+                        animating={loading}
+                        color="white"
+                        size="large"
+                    />
+                    {!loading && (
+                        <View>
+                            {error && (
+                                <Text style={[styles.smallText, styles.textStyle]}>
+                                    Could not load weather, please try a different city
+                                </Text>
+                            )}
+
+                            {!error && (
+                                <View>
+                                    <Text style={[styles.largeText, styles.textStyle]}>
+                                        {location}
+                                    </Text>
+                                    <Text style={[styles.smallText, styles.textStyle]}>
+                                        {weather}
+                                    </Text>
+                                    <Text style={[styles.largeText, styles.textStyle]}>
+                                        {`${Math.round(temperature)}º`}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    )}
                     <SearchInput location={location} onSubmit={handleUpdateLocation}/>
                 </View>
             </ImageBackground>
