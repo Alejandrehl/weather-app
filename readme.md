@@ -6,3 +6,4 @@
 - Platform 
 - View
 - ImageBackground
+- React Hooks
