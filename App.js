@@ -13,6 +13,9 @@ import SearchInput from "./components/SearchInput";
 
 const App = () => {
     const [location, setLocation] = useState("San Francisco");
+    const handleUpdateLocation = (city) => {
+        setLocation(city);
+    };
 
     return (
         <KeyboardAvoidingView
@@ -34,7 +37,7 @@ const App = () => {
                     <Text style={[styles.largeText, styles.textStyle]}>
                         24º
                     </Text>
-                    <SearchInput location={location} setLocation={setLocation}/>
+                    <SearchInput location={location} onSubmit={handleUpdateLocation}/>
                 </View>
             </ImageBackground>
         </KeyboardAvoidingView>

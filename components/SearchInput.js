@@ -1,9 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import {StyleSheet, TextInput} from "react-native";
 
-const SearchInput = ({setLocation}) => {
+const SearchInput = ({onSubmit}) => {
+    const [text, setText] = useState('');
     const handleChangeText = (newLocation) => {
-        setLocation(newLocation);
+        setText(newLocation);
+    };
+
+    const handlleSubmitEditing = () => {
+        if (!text) return;
+        onSubmit(text);
+        setText('');
     };
 
     return (
@@ -15,6 +22,7 @@ const SearchInput = ({setLocation}) => {
             clearButtonMode="always"
             underlineColorAndroid="transparent"
             onChangeText={handleChangeText}
+            onSubmitEditing={handlleSubmitEditing}
         />
     )
 };
