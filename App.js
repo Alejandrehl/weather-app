@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     StyleSheet,
     Text,
@@ -12,10 +12,14 @@ import getImageForWeather from "./utils/getImageForWeather";
 import SearchInput from "./components/SearchInput";
 
 const App = () => {
-    const [location, setLocation] = useState("San Francisco");
+    const [location, setLocation] = useState("");
     const handleUpdateLocation = (city) => {
         setLocation(city);
     };
+
+    useEffect(() => {
+        handleUpdateLocation("San Francisco");
+    }, []);
 
     return (
         <KeyboardAvoidingView
